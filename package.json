@@ -1,0 +1,23 @@
+{
+  "name": "min4337",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "transfer": "ts-node src/transfer.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/node": "^24.3.0",
+    "dotenv": "^17.2.1",
+    "ethers": "^6.15.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "viem": "^2.34.0"
+  }
+}

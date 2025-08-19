@@ -1,0 +1,25 @@
+# Dependencies
+/node_modules
+/contracts/lib
+
+# Build artifacts
+/dist
+/contracts/cache
+/contracts/out
+/contracts/broadcast
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS-specific
+.DS_Store
