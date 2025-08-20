@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts",
-    "transfer": "ts-node src/transfer.ts"
+    "transfer": "ts-node src/transfer.ts",
+    "test-enhanced": "ts-node src/enhanced-transfer.ts",
+    "enhanced-transfer": "ts-node src/enhanced-transfer-with-payment.ts",
+    "compare-transfers": "ts-node src/compare-transfers.ts"
   },
   "keywords": [],
   "author": "",
