@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "enhanced-transfer": "ts-node src/enhanced-transfer-with-payment.ts"
+    "transfer": "ts-node src/enhanced-transfer-with-payment.ts"
   },
   "keywords": [],
   "author": "",

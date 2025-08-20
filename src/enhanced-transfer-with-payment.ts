@@ -34,7 +34,7 @@ async function main() {
     }
 
     // 设置转账参数
-    const recipientAddress = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'; // 示例收款地址
+    const recipientAddress = '0x075F227E25a63417Bf66F6e751b376B09Fd43928'; // 示例收款地址
     const transferAmount = ethers.parseEther('0.0001'); // 转账0.0001 ETH
 
     console.log(`📤 转账目标: ${recipientAddress}`);
