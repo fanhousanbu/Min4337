@@ -1,158 +1,191 @@
-# Min4337 - 最精简的ERC-4337转账实现
+# Min4337 - Minimal ERC-4337 Implementation with Enhanced Signature Validation
 
-这是一个最精简的ERC-4337账户抽象转账功能实现，包含智能合约和TypeScript客户端。
+A minimal ERC-4337 Account Abstraction implementation featuring pluggable signature validators and on-chain signature verification.
 
-## 🎯 特性
+## 🎯 Features
 
-- ✅ **最精简实现** - 专注核心转账功能，去除不必要的复杂性
-- ✅ **固定Salt** - 使用固定salt值便于调试和测试
-- ✅ **完整流程** - 从UserOperation创建到Bundler提交的完整ERC-4337流程
-- ✅ **v0.6兼容** - 与主流Bundler服务兼容
-- ✅ **已部署验证** - 合约已部署并验证到Sepolia测试网
-- 🆕 **自定义验签** - 支持可插拔的签名验证器
-- 🆕 **多签支持** - 内置多重签名验证器
-- 🆕 **向后兼容** - 完全兼容标准ECDSA验证
+- ✅ **Enhanced Validation** - Pluggable signature validators with on-chain verification
+- ✅ **Custom Validators** - Support for ECDSA, Multi-sig, and custom validation logic
+- ✅ **Fixed Salt** - Deterministic addresses for consistent debugging
+- ✅ **Complete ERC-4337 Flow** - From UserOperation creation to bundler submission
+- ✅ **v0.6 Compatible** - Compatible with mainstream bundler services
+- ✅ **Deployed & Verified** - Contracts deployed and verified on Sepolia testnet
+- ✅ **Backward Compatible** - Fully compatible with standard ECDSA validation
 
-## 🏗️ 项目结构
+## 🏗️ Project Structure
 
 ```
 Min4337/
-├── .env                           # 环境配置
-├── package.json                   # Node.js项目配置
-├── tsconfig.json                  # TypeScript配置
-├── README.md                      # 项目文档
-├── contracts/                     # Foundry智能合约项目
-│   ├── foundry.toml              # Foundry配置
-│   ├── lib/                      # 合约依赖
+├── .env                                    # Environment configuration
+├── package.json                           # Node.js project config
+├── tsconfig.json                          # TypeScript config
+├── README.md                              # Project documentation
+├── contracts/                             # Foundry smart contract project
+│   ├── foundry.toml                       # Foundry configuration
+│   ├── lib/                               # Contract dependencies (git submodules)
 │   ├── src/
-│   │   ├── SimpleAccountV6.sol          # ERC-4337智能账户(v0.6兼容)
-│   │   └── SimpleAccountFactoryV6.sol   # 账户工厂合约
+│   │   ├── SimpleAccountV6Enhanced.sol         # Enhanced ERC-4337 account
+│   │   ├── SimpleAccountFactoryV6Enhanced.sol  # Enhanced account factory
+│   │   ├── ISignatureValidator.sol             # Validator interface
+│   │   ├── ECDSAValidator.sol                  # Enhanced ECDSA validator
+│   │   └── MultiSigValidator.sol               # Multi-signature validator
 │   └── script/
-│       └── DeployV6.s.sol        # 部署脚本
-└── src/                          # TypeScript客户端
-    ├── types.ts                  # 类型定义
-    ├── config.ts                 # 配置管理
-    ├── account.ts                # 账户抽象逻辑
-    ├── bundler.ts                # Bundler交互
-    ├── index.ts                  # 演示脚本
-    └── transfer.ts               # 转账功能
+│       └── DeployEnhanced.s.sol          # Enhanced deployment script
+└── src/                                   # TypeScript client
+    ├── types.ts                          # Type definitions
+    ├── config.ts                         # Configuration management
+    ├── bundler.ts                        # Bundler interaction
+    ├── enhanced-account.ts               # Enhanced account abstraction logic
+    └── enhanced-transfer-with-payment.ts # Complete transfer demonstration
 ```
 
-## 🔧 环境配置
+## 🔧 Environment Setup
 
-环境变量在 `.env` 文件中配置：
+Configure environment variables in `.env` file:
 
 ```env
 ETH_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
-ETH_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+ETH_PRIVATE_KEY=0xYOUR_PRIVATE_KEY_HERE
 BUNDLER_RPC_URL=https://api.pimlico.io/v2/11155111/rpc?apikey=YOUR_API_KEY
-ACCOUNT_FACTORY_ADDRESS=0xdDe3Dd4e4Bb65e877888Bbe4B4bEB82df7DA8E22
 ENTRY_POINT_ADDRESS=0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789
 ETHERSCAN_API=YOUR_ETHERSCAN_API_KEY
 ```
 
-## 📝 已部署合约
+## 📝 Deployed Contracts
 
-**Sepolia测试网:**
+**Sepolia Testnet:**
 
-**基础版本:**
-- **SimpleAccountFactoryV6**: `0xdDe3Dd4e4Bb65e877888Bbe4B4bEB82df7DA8E22`
-- **SimpleAccountV6** (实现): `0x8886824153aD7BE6d80448A87163DB5eBfF74F2c`
-
-**增强版本 (自定义验签):**
+**Enhanced Version (Custom Signature Validation):**
 - **SimpleAccountFactoryV6Enhanced**: `0x22403667e5511eed545396d22655C89e53e67529`
-- **SimpleAccountV6Enhanced** (实现): `0xFCc53A1422f949519A59c8767e89A12BFc607C21`
+- **SimpleAccountV6Enhanced** (Implementation): `0xFCc53A1422f949519A59c8767e89A12BFc607C21`
 - **ECDSAValidator**: `0x08922A87fAd7E85F75095c583B56cee011949F13`
 - **MultiSigValidator**: `0xA89922f2bd31Df760006D3B273535D662eCa1D9c`
 
-**通用:**
-- **EntryPoint**: `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789` (官方v0.6)
+**Standard:**
+- **EntryPoint**: `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789` (Official v0.6)
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 安装依赖
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. 查看账户信息
+### 2. Fund Your Account
+The enhanced account will use a deterministic address. Fund it with some ETH for gas fees (recommended 0.005 ETH or more).
+
+### 3. Run Enhanced Transfer Demo
 ```bash
-npm run start
+npm run enhanced-transfer
 ```
-这将显示智能账户地址和基本信息。
+This demonstrates the complete enhanced ERC-4337 transfer flow with custom signature validation.
 
-### 3. 向账户转入ETH
-向显示的账户地址转入一些ETH用于支付gas费用（建议0.005 ETH以上）。
-
-### 4. 执行转账测试
-```bash
-npm run transfer
-```
-
-### 5. 测试增强版功能
-```bash
-npm run test-enhanced
-```
-
-### 6. 编译TypeScript（可选）
+### 4. Compile TypeScript (Optional)
 ```bash
 npm run build
 ```
 
-## 💡 核心工作流程
+## 💡 Core Workflow
 
-1. **创建智能账户地址** - 使用固定salt(123456)生成确定性地址
-2. **构建UserOperation** - 创建包含转账信息的UserOperation
-3. **签名验证** - 使用私钥对UserOperation进行签名
-4. **提交Bundler** - 通过Pimlico bundler提交到EntryPoint
-5. **执行转账** - EntryPoint验证并执行转账操作
+1. **Enhanced Account Creation** - Deploy account with pluggable signature validator
+2. **Custom Validation Setup** - Configure on-chain signature validation contract
+3. **UserOperation Construction** - Build UserOperation with enhanced validation data
+4. **On-chain Signature Verification** - Validator contract verifies signatures
+5. **Bundler Submission** - Submit through Pimlico bundler to EntryPoint
+6. **Transaction Execution** - EntryPoint validates and executes the transfer
 
-## 🔑 技术特点
+## 🔑 Technical Highlights
 
-- **固定Salt**: 使用`123456`作为固定salt，确保多次调试使用同一地址
-- **v0.6兼容**: 完全兼容ERC-4337 v0.6规范和主流bundler服务
-- **签名验证**: 支持标准的ECDSA签名验证
-- **Gas优化**: 最小化gas消耗的合约设计
-- **错误处理**: 完善的错误处理和日志输出
-- **可插拔验签**: 支持自定义签名验证逻辑，可以实现多签、时间锁等复杂场景
-- **验签器合约**: 独立的验签器合约，支持ECDSA、多签等多种验证方式
+### Enhanced Signature Validation
+- **Pluggable Validators**: Support for custom validation logic via interface contracts
+- **On-chain Verification**: Signature validation performed by deployed contracts
+- **Multiple Validators**: ECDSA, Multi-sig, and extensible custom validators
+- **Fallback Mechanism**: Graceful fallback to standard ECDSA if custom validator fails
 
-## 📋 示例输出
+### Smart Contract Features
+- **ISignatureValidator Interface**: Standard interface for all validation contracts
+- **ECDSAValidator Contract**: Enhanced ECDSA validation with replay protection
+- **MultiSigValidator Contract**: Multi-signature validation implementation
+- **Event Logging**: Comprehensive events for validation tracking and debugging
+
+### Client Features
+- **EnhancedAccountAbstraction Class**: Full-featured account management
+- **Validator Configuration**: Runtime validator switching and configuration
+- **Fixed Salt**: Uses `12345` as fixed salt for deterministic addresses
+- **v0.6 Compatibility**: Full compatibility with ERC-4337 v0.6 specification
+
+## 📋 Demo Output Example
 
 ```
-🚀 开始ERC-4337转账...
-📝 Account Address: 0xab0b3c149FdF643A96b535ee60b43639F83A1B57
+🚀 开始增强版ERC-4337转账...
+=====================================
+📝 Enhanced Account Address: 0xab0b3c149FdF643A96b535ee60b43639F83A1B57
+🔧 验证器配置:
+   - 验证器地址: 0x08922A87fAd7E85F75095c583B56cee011949F13
+   - 使用自定义验证: true
+   - 账户拥有者: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 💰 Account Balance: 0.05 ETH
 📤 转账目标: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 💸 转账金额: 0.0001 ETH
+🔐 使用增强版自定义验证器进行签名验证
+
 📋 创建UserOperation...
 ✅ UserOperation创建成功
 📡 发送UserOperation到Bundler...
 ✅ UserOperation已提交, Hash: 0xa76917...
 ⏳ 等待交易确认...
-🎉 转账成功!
+🎉 增强版转账成功!
 📄 Transaction Hash: 0x4549fa...
 🔗 查看交易: https://sepolia.etherscan.io/tx/0x4549fa...
+
+🆕 增强版特性验证:
+- ✅ 使用了自定义ECDSA验证器
+- ✅ 支持可插拔签名验证逻辑
+- ✅ 保持与标准ERC-4337的完全兼容
+- ✅ 验证器地址: 0x08922A87fAd7E85F75095c583B56cee011949F13
 ```
 
-## 🛠️ 技术栈
+## 🛠️ Technology Stack
 
-- **智能合约**: Solidity + Foundry + OpenZeppelin
-- **客户端**: TypeScript + Ethers.js v6
-- **网络**: Sepolia测试网
+- **Smart Contracts**: Solidity + Foundry + OpenZeppelin
+- **Client**: TypeScript + Ethers.js v6
+- **Network**: Sepolia Testnet
 - **Bundler**: Pimlico
-- **标准**: ERC-4337 Account Abstraction v0.6
+- **Standard**: ERC-4337 Account Abstraction v0.6
+- **Validation**: Custom on-chain signature validators
 
-## ⚠️ 注意事项
+## ⚠️ Important Notes
 
-- 确保智能账户有足够ETH支付gas费用
-- 固定salt便于调试，生产环境建议使用随机salt
-- Bundler服务需要有效的API key
-- 转账目标地址在代码中硬编码，可根据需要修改
+- Ensure the smart account has sufficient ETH for gas fees
+- Fixed salt is used for debugging; use random salt in production
+- Bundler service requires a valid API key
+- Custom validators can be extended for complex validation scenarios
+- All private keys should be kept secure and never committed to version control
 
-## 📖 相关资源
+## 🔧 Contract Development
 
-- [ERC-4337 规范](https://eips.ethereum.org/EIPS/eip-4337)
-- [Account Abstraction 文档](https://www.erc4337.io/)
+### Building Contracts
+```bash
+cd contracts
+forge build
+```
+
+### Testing Contracts
+```bash
+cd contracts
+forge test
+```
+
+### Deploying New Contracts
+```bash
+cd contracts
+forge script script/DeployEnhanced.s.sol --rpc-url sepolia --broadcast --verify
+```
+
+## 📖 Related Resources
+
+- [ERC-4337 Specification](https://eips.ethereum.org/EIPS/eip-4337)
+- [Account Abstraction Documentation](https://www.erc4337.io/)
 - [Pimlico Bundler](https://docs.pimlico.io/)
-- [Foundry 工具链](https://book.getfoundry.sh/)
+- [Foundry Toolkit](https://book.getfoundry.sh/)
+- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/)
